@@ -67,6 +67,11 @@ custom_math::vector_3 last_pos = mercury_pos;
 size_t orbit_count = 0;
 
 
+custom_math::vector_3 initial_dir(0, 1, 0);
+
+
+
+
 // http://einsteinrelativelyeasy.com/index.php/general-relativity/174-advance-of-the-perihelion-of-mercury
 // https://astronomy.stackexchange.com/a/29008/15517
 
@@ -74,11 +79,7 @@ const double a = 57.909e9; // semi-major axis of Mercury
 const double e = e_vec.length();
 const double pi = 4.0 * atan(1.0);
 float delta = 6 * pi * grav_constant * sun_mass / (speed_of_light*speed_of_light * (1 - e*e) * a);
-float delta3 = 414.7727 * delta;
- 
 
-
-float delta2 = 41.11 / (1 - 0.2056 * 0.2056);
 
 
 vector<custom_math::vector_3> positions;
