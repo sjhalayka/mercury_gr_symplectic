@@ -62,6 +62,7 @@ void proceed_symplectic4(custom_math::vector_3& pos, custom_math::vector_3& vel,
 	const float Rs = 2 * grav_constant * sun_mass / (speed_of_light * speed_of_light);
 	const float beta = sqrt(1.0 - Rs / distance);
 
+
 	pos += vel * beta * c[0] * dt;
 	vel += grav_acceleration(pos, vel, G) * d[0] * dt;
 
@@ -123,11 +124,35 @@ void proceed_symplectic4(custom_math::vector_3& pos, custom_math::vector_3& vel,
 
 void idle_func(void)
 {
-	const double dt = (speed_of_light / mercury_vel.length());
+	const double dt = 0.1*(speed_of_light / mercury_vel.length());
+
+	last_pos = mercury_pos;
 
 	proceed_symplectic4(mercury_pos, mercury_vel, grav_constant, dt);
 
-	cout << e_vec.length() << " " << delta << endl;
+	if (decreasing)
+	{
+		if (mercury_pos.length() > last_pos.length())
+		{
+//			cout << "Found aphelion" << endl;
+			decreasing = false;
+		}
+	}
+	else
+	{
+		if (mercury_pos.length() < last_pos.length())
+		{
+//			cout << "Found perihelion" << endl;
+			orbit_count++;
+			decreasing = true;
+		}
+	}
+	
+
+
+
+
+	cout <<  delta << " " << delta2 << " "  << delta3 << endl;
 
 	positions.push_back(mercury_pos);
 
