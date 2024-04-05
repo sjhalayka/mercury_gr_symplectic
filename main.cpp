@@ -127,6 +127,8 @@ void idle_func(void)
 
 	proceed_symplectic4(mercury_pos, mercury_vel, grav_constant, dt);
 
+	cout << e_vec.length() << " " << delta << endl;
+
 	positions.push_back(mercury_pos);
 
 	glutPostRedisplay();

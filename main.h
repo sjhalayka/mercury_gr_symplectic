@@ -56,8 +56,18 @@ const double sun_mass = 1.989e30;
 
 custom_math::vector_3 sun_pos(0, 0, 0);
 custom_math::vector_3 mercury_pos(0, 69817079000.0, 0);
-custom_math::vector_3 mercury_vel(-38860, 0, 0); // -38860
+const float circular_vel = sqrt(grav_constant * sun_mass / mercury_pos.y);
+custom_math::vector_3 mercury_vel(-10000, 0, 0); // -38860
+custom_math::vector_3 h = mercury_pos.cross(mercury_vel);
+custom_math::vector_3 e_vec = mercury_vel.cross(h) / (grav_constant * sun_mass) - mercury_pos / mercury_pos.length();
 
+// http://einsteinrelativelyeasy.com/index.php/general-relativity/174-advance-of-the-perihelion-of-mercury
+// https://astronomy.stackexchange.com/a/29008/15517
+
+const float a = mercury_pos.y;
+const float e = e_vec.length();
+const float pi = 4.0 * atan(1.0);
+float delta = 6 * pi * grav_constant * sun_mass / (speed_of_light*speed_of_light * (1 - e*e) * a);
 
 
 
