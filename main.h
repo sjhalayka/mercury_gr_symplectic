@@ -57,8 +57,6 @@ const double sun_mass = 1.989e30;
 custom_math::vector_3 sun_pos(0, 0, 0);
 custom_math::vector_3 mercury_pos(0, 69817079000.0, 0);
 custom_math::vector_3 mercury_vel(-38860, 0, 0); // -38860
-custom_math::vector_3 h = mercury_pos.cross(mercury_vel);
-custom_math::vector_3 e_vec = mercury_vel.cross(h) / (grav_constant * sun_mass) - mercury_pos / mercury_pos.length();
 
 bool decreasing = true;
 
@@ -73,10 +71,9 @@ custom_math::vector_3 initial_dir(0, 1, 0);
 // http://einsteinrelativelyeasy.com/index.php/general-relativity/174-advance-of-the-perihelion-of-mercury
 // https://astronomy.stackexchange.com/a/29008/15517
 
-const double a = 57.909e9; // semi-major axis of Mercury
-const double e = e_vec.length();
+
 const double pi = 4.0 * atan(1.0);
-double delta = 6 * pi * grav_constant * sun_mass / (speed_of_light*speed_of_light * (1 - e*e) * a);
+double delta = 6 * pi * grav_constant * sun_mass / (speed_of_light*speed_of_light * (1 - 0.2056* 0.2056) * 57.909e9);
 
 
 

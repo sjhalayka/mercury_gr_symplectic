@@ -59,9 +59,8 @@ void proceed_symplectic4(custom_math::vector_3& pos, custom_math::vector_3& vel,
 
 	custom_math::vector_3 grav_dir = sun_pos - pos;
 	double distance = grav_dir.length();
-	const double Rs = 2 * grav_constant * sun_mass / (speed_of_light * speed_of_light);
-	const double beta = 1;// sqrt(1.0 - Rs / distance);
-
+	double Rs = 2 * grav_constant * sun_mass / (speed_of_light * speed_of_light);
+	double beta = 1.0;// sqrt(1.0 - Rs / distance);
 
 	pos += vel * beta * c[0] * dt;
 	vel += grav_acceleration(pos, vel, G) * d[0] * dt;
@@ -77,6 +76,8 @@ void proceed_symplectic4(custom_math::vector_3& pos, custom_math::vector_3& vel,
 
 	grav_dir = sun_pos - pos;
 	distance = grav_dir.length();
+	Rs = 2 * grav_constant * sun_mass / (speed_of_light * speed_of_light);
+	beta = 1.0;//sqrt(1.0 - Rs / distance);
 
 	pos += vel * beta * c[1] * dt;
 	vel += grav_acceleration(pos, vel, G) * d[1] * dt;
@@ -92,6 +93,8 @@ void proceed_symplectic4(custom_math::vector_3& pos, custom_math::vector_3& vel,
 
 	grav_dir = sun_pos - pos;
 	distance = grav_dir.length();
+	Rs = 2 * grav_constant * sun_mass / (speed_of_light * speed_of_light);
+	beta = 1.0;//sqrt(1.0 - Rs / distance);
 
 	pos += vel * beta * c[2] * dt;
 	vel += grav_acceleration(pos, vel, G) * d[2] * dt;
@@ -108,6 +111,8 @@ void proceed_symplectic4(custom_math::vector_3& pos, custom_math::vector_3& vel,
 
 	grav_dir = sun_pos - pos;
 	distance = grav_dir.length();
+	Rs = 2 * grav_constant * sun_mass / (speed_of_light * speed_of_light);
+	beta = 1.0;//sqrt(1.0 - Rs / distance);
 
 	pos += vel * beta * c[3] * dt;
 	//	vel += grav_acceleration(pos, vel, G) * d[3] * dt; // last element d[3] is always 0
