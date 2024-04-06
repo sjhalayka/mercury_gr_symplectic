@@ -73,7 +73,7 @@ custom_math::vector_3 initial_dir(0, 1, 0);
 
 
 const double pi = 4.0 * atan(1.0);
-double delta = 6 * pi * grav_constant * sun_mass / (speed_of_light*speed_of_light * (1 - 0.2056* 0.2056) * 57.909e9);
+double delta = 6 * pi * grav_constant * sun_mass / (speed_of_light*speed_of_light * (1 - 0.2056*0.2056) * 57.909e9);
 
 
 
