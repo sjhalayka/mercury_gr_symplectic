@@ -35,6 +35,27 @@ custom_math::vector_3 grav_acceleration(const custom_math::vector_3& pos, const 
 }
 
 
+void proceed_Euler(custom_math::vector_3& pos, custom_math::vector_3& vel, const double G, const double dt)
+{
+	custom_math::vector_3 accel = grav_acceleration(pos, vel, G);
+
+	const custom_math::vector_3 grav_dir = sun_pos - pos;
+	const float distance = grav_dir.length();
+	const float Rs = 2 * grav_constant * sun_mass / (speed_of_light * speed_of_light);
+	const float beta = 1.0;// sqrt(1.0 - Rs / distance);
+
+	vel += accel * dt;
+
+	if (vel.length() > speed_of_light)
+	{
+		vel.normalize();
+		vel *= speed_of_light;
+	}
+
+	pos += vel * beta * dt;
+}
+
+
 void proceed_symplectic4(custom_math::vector_3& pos, custom_math::vector_3& vel, const double G, const double dt)
 {
 	static double const cr2 = pow(2.0, 1.0 / 3.0);
@@ -132,6 +153,8 @@ void idle_func(void)
 
 	custom_math::vector_3 last_pos = mercury_pos;
 
+	//proceed_Euler(mercury_pos, mercury_vel, grav_constant, dt);
+
 	proceed_symplectic4(mercury_pos, mercury_vel, grav_constant, dt);
 
 	if (decreasing)
@@ -163,12 +186,12 @@ void idle_func(void)
 
 			const double avg = total / orbit_count;
 
-			float num_orbits_per_century = 365.0 / 88.0 * 100;
-			float to_arcseconds = 1 / (pi / (180.0 * 3600.0));
+			const double num_orbits_per_earth_century = 365.0 / 88.0 * 100;
+			const double to_arcseconds = 1 / (pi / (180.0 * 3600.0));
 
 			cout << "orbit count " << orbit_count << endl;
-			cout << delta * num_orbits_per_century * to_arcseconds << endl;
-			cout << avg * num_orbits_per_century * to_arcseconds << endl;
+			cout << delta * num_orbits_per_earth_century * to_arcseconds << endl;
+			cout << avg * num_orbits_per_earth_century * to_arcseconds << endl;
 
 			cout << endl;
 
