@@ -25,9 +25,9 @@ custom_math::vector_3 grav_acceleration(const custom_math::vector_3& pos, const 
 {
 	custom_math::vector_3 grav_dir = sun_pos - pos;
 
-	float distance = grav_dir.length();
+	double distance = grav_dir.length();
 	grav_dir.normalize();
-	const float x = 2 - sqrt(1 - (vel.length() * vel.length()) / (speed_of_light * speed_of_light));
+	const double x = 1;// 2 - sqrt(1 - (vel.length() * vel.length()) / (speed_of_light * speed_of_light));
 
 	custom_math::vector_3 accel = grav_dir * x * G * sun_mass / pow(distance, 2.0);
 
@@ -58,9 +58,9 @@ void proceed_symplectic4(custom_math::vector_3& pos, custom_math::vector_3& vel,
 
 
 	custom_math::vector_3 grav_dir = sun_pos - pos;
-	float distance = grav_dir.length();
-	const float Rs = 2 * grav_constant * sun_mass / (speed_of_light * speed_of_light);
-	const float beta = sqrt(1.0 - Rs / distance);
+	double distance = grav_dir.length();
+	const double Rs = 2 * grav_constant * sun_mass / (speed_of_light * speed_of_light);
+	const double beta = 1;// sqrt(1.0 - Rs / distance);
 
 
 	pos += vel * beta * c[0] * dt;
@@ -119,14 +119,13 @@ void proceed_symplectic4(custom_math::vector_3& pos, custom_math::vector_3& vel,
 	}
 }
 
-
-
+float total = 0;
 
 void idle_func(void)
 {
 	const double dt = (speed_of_light / mercury_vel.length());
 
-	last_pos = mercury_pos;
+	custom_math::vector_3 last_pos = mercury_pos;
 
 	proceed_symplectic4(mercury_pos, mercury_vel, grav_constant, dt);
 
@@ -150,9 +149,22 @@ void idle_func(void)
 			custom_math::vector_3 current_dir = mercury_pos;
 			current_dir.normalize();
 
-			double angle_arcseconds = acos(current_dir.dot(initial_dir)) / pi * (180 * 3600);
+			const double angle = acos(current_dir.dot(initial_dir));
 
-			cout << "orbit count " << orbit_count << " " << angle_arcseconds << endl;
+			if (mercury_pos.x < 0)
+				total += angle;
+			else
+				total -= angle;
+
+			const double avg = total / orbit_count;
+
+			cout << "orbit count " << orbit_count << endl;
+			cout << delta << endl; 
+			cout << avg << endl;
+
+			cout << endl;
+
+			positions.clear();
 
 			decreasing = true;
 		}
@@ -239,7 +251,7 @@ void draw_objects(void)
 	glColor3f(1.0, 1.0, 1.0);
 
 	for (size_t i = 0; i < positions.size(); i++)
-		glVertex3f(positions[i].x, positions[i].y, positions[i].z);
+		glVertex3d(positions[i].x, positions[i].y, positions[i].z);
 
 	glEnd();
 
@@ -316,11 +328,6 @@ void display_func(void)
 		render_string(10, start + 4 * break_size, GLUT_BITMAP_HELVETICA_18, string("Keyboard controls:"));
 		render_string(10, start + 5 * break_size, GLUT_BITMAP_HELVETICA_18, string("  w: Draw axis"));
 		render_string(10, start + 6 * break_size, GLUT_BITMAP_HELVETICA_18, string("  e: Draw text"));
-		render_string(10, start + 7 * break_size, GLUT_BITMAP_HELVETICA_18, string("  u: Rotate camera +u"));
-		render_string(10, start + 8 * break_size, GLUT_BITMAP_HELVETICA_18, string("  i: Rotate camera -u"));
-		render_string(10, start + 9 * break_size, GLUT_BITMAP_HELVETICA_18, string("  o: Rotate camera +v"));
-		render_string(10, start + 10 * break_size, GLUT_BITMAP_HELVETICA_18, string("  p: Rotate camera -v"));
-
 
 
 		custom_math::vector_3 eye = main_camera.eye;
@@ -359,30 +366,6 @@ void keyboard_func(unsigned char key, int x, int y)
 	case 'e':
 	{
 		draw_control_list = !draw_control_list;
-		break;
-	}
-	case 'u':
-	{
-		main_camera.u -= u_spacer;
-		main_camera.Set();
-		break;
-	}
-	case 'i':
-	{
-		main_camera.u += u_spacer;
-		main_camera.Set();
-		break;
-	}
-	case 'o':
-	{
-		main_camera.v -= v_spacer;
-		main_camera.Set();
-		break;
-	}
-	case 'p':
-	{
-		main_camera.v += v_spacer;
-		main_camera.Set();
 		break;
 	}
 

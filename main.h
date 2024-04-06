@@ -56,13 +56,11 @@ const double sun_mass = 1.989e30;
 
 custom_math::vector_3 sun_pos(0, 0, 0);
 custom_math::vector_3 mercury_pos(0, 69817079000.0, 0);
-//const double circular_vel = sqrt(grav_constant * sun_mass / mercury_pos.y);
 custom_math::vector_3 mercury_vel(-38860, 0, 0); // -38860
 custom_math::vector_3 h = mercury_pos.cross(mercury_vel);
 custom_math::vector_3 e_vec = mercury_vel.cross(h) / (grav_constant * sun_mass) - mercury_pos / mercury_pos.length();
 
 bool decreasing = true;
-custom_math::vector_3 last_pos = mercury_pos;
 
 size_t orbit_count = 0;
 
@@ -78,7 +76,7 @@ custom_math::vector_3 initial_dir(0, 1, 0);
 const double a = 57.909e9; // semi-major axis of Mercury
 const double e = e_vec.length();
 const double pi = 4.0 * atan(1.0);
-float delta = 6 * pi * grav_constant * sun_mass / (speed_of_light*speed_of_light * (1 - e*e) * a);
+double delta = 6 * pi * grav_constant * sun_mass / (speed_of_light*speed_of_light * (1 - e*e) * a);
 
 
 
@@ -94,16 +92,16 @@ uv_camera main_camera;
 
 GLint win_id = 0;
 GLint win_x = 800, win_y = 600;
-float camera_w = 2e11;
+double camera_w = 2e11;
 
-float camera_fov = 45;
-float camera_x_transform = 0;
-float camera_y_transform = 0;
-float u_spacer = 0.01;
-float v_spacer = 0.5*u_spacer;
-float w_spacer = 0.1;
-float camera_near = 1;
-float camera_far = 1000000000;
+double camera_fov = 45;
+double camera_x_transform = 0;
+double camera_y_transform = 0;
+double u_spacer = 0.01;
+double v_spacer = 0.5*u_spacer;
+double w_spacer = 0.1;
+double camera_near = 1;
+double camera_far = 1000000000;
 
 bool lmb_down = false;
 bool mmb_down = false;
