@@ -128,7 +128,7 @@ float total = 0;
 
 void idle_func(void)
 {
-	const double dt = (speed_of_light / mercury_vel.length());
+	const double dt = 0.01 * (speed_of_light / mercury_vel.length());
 
 	custom_math::vector_3 last_pos = mercury_pos;
 
@@ -163,9 +163,12 @@ void idle_func(void)
 
 			const double avg = total / orbit_count;
 
+			float num_orbits_per_century = 365.0 / 88.0 * 100;
+			float to_arcseconds = 1 / (pi / (180.0 * 3600.0));
+
 			cout << "orbit count " << orbit_count << endl;
-			cout << delta << endl; 
-			cout << avg << endl;
+			cout << delta * num_orbits_per_century * to_arcseconds << endl;
+			cout << avg * num_orbits_per_century * to_arcseconds << endl;
 
 			cout << endl;
 
