@@ -21,13 +21,13 @@ int main(int argc, char** argv)
 	return 0;
 }
 
-custom_math::vector_3 grav_acceleration(const custom_math::vector_3& pos, const custom_math::vector_3& vel, const long double G)
+custom_math::vector_3 grav_acceleration(const custom_math::vector_3& pos, const custom_math::vector_3& vel, const double G)
 {
 	custom_math::vector_3 grav_dir = sun_pos - pos;
 
-	long double distance = grav_dir.length();
+	double distance = grav_dir.length();
 	grav_dir.normalize();
-	const long double x =  2 - sqrt(1 - (vel.length() * vel.length()) / (speed_of_light * speed_of_light));
+	const double x = 2 - sqrt(1 - (vel.length() * vel.length()) / (speed_of_light * speed_of_light));
 
 	custom_math::vector_3 accel = grav_dir * x * G * sun_mass / pow(distance, 2.0);
 
@@ -35,14 +35,14 @@ custom_math::vector_3 grav_acceleration(const custom_math::vector_3& pos, const 
 }
 
 
-void proceed_Euler(custom_math::vector_3& pos, custom_math::vector_3& vel, const long double G, const long double dt)
+void proceed_Euler(custom_math::vector_3& pos, custom_math::vector_3& vel, const double G, const double dt)
 {
 	custom_math::vector_3 accel = grav_acceleration(pos, vel, G);
 
 	const custom_math::vector_3 grav_dir = sun_pos - pos;
 	const float distance = grav_dir.length();
 	const float Rs = 2 * grav_constant * sun_mass / (speed_of_light * speed_of_light);
-	const float beta =  sqrt(1.0 - Rs / distance);
+	const float beta = sqrt(1.0 - Rs / distance);
 
 	vel += accel * dt;
 
@@ -57,9 +57,9 @@ void proceed_Euler(custom_math::vector_3& pos, custom_math::vector_3& vel, const
 
 
 
-void proceed_RK4(custom_math::vector_3& pos, custom_math::vector_3& vel, const long double G, const long double dt)
+void proceed_RK4(custom_math::vector_3& pos, custom_math::vector_3& vel, const double G, const double dt)
 {
-	static const long double one_sixth = 1.0 / 6.0;
+	static const double one_sixth = 1.0 / 6.0;
 
 	custom_math::vector_3 k1_velocity = vel;
 	custom_math::vector_3 k1_acceleration = grav_acceleration(pos, k1_velocity, G);
@@ -71,9 +71,9 @@ void proceed_RK4(custom_math::vector_3& pos, custom_math::vector_3& vel, const l
 	custom_math::vector_3 k4_acceleration = grav_acceleration(pos + k3_velocity * dt, k4_velocity, G);
 
 	custom_math::vector_3 grav_dir = sun_pos - pos;
-	long double distance = grav_dir.length();
-	long double Rs = 2 * grav_constant * sun_mass / (speed_of_light * speed_of_light);
-	long double beta = sqrt(1.0 - Rs / distance);
+	double distance = grav_dir.length();
+	double Rs = 2 * grav_constant * sun_mass / (speed_of_light * speed_of_light);
+	double beta = sqrt(1.0 - Rs / distance);
 
 	pos += (k1_velocity + (k2_velocity + k3_velocity) * 2.0 + k4_velocity) * one_sixth * dt * beta;
 
@@ -90,11 +90,11 @@ void proceed_RK4(custom_math::vector_3& pos, custom_math::vector_3& vel, const l
 
 
 
-void proceed_symplectic4(custom_math::vector_3& pos, custom_math::vector_3& vel, const long double G, const long double dt)
+void proceed_symplectic4(custom_math::vector_3& pos, custom_math::vector_3& vel, const double G, const double dt)
 {
-	static long double const cr2 = pow(2.0, 1.0 / 3.0);
+	static double const cr2 = pow(2.0, 1.0 / 3.0);
 
-	static const long double c[4] =
+	static const double c[4] =
 	{
 		1.0 / (2.0 * (2.0 - cr2)),
 		(1.0 - cr2) / (2.0 * (2.0 - cr2)),
@@ -102,7 +102,7 @@ void proceed_symplectic4(custom_math::vector_3& pos, custom_math::vector_3& vel,
 		1.0 / (2.0 * (2.0 - cr2))
 	};
 
-	static const long double d[4] =
+	static const double d[4] =
 	{
 		1.0 / (2.0 - cr2),
 		-cr2 / (2.0 - cr2),
@@ -113,9 +113,9 @@ void proceed_symplectic4(custom_math::vector_3& pos, custom_math::vector_3& vel,
 
 
 	custom_math::vector_3 grav_dir = sun_pos - pos;
-	long double distance = grav_dir.length();
-	long double Rs = 2 * grav_constant * sun_mass / (speed_of_light * speed_of_light);
-	long double beta = sqrt(1.0 - Rs / distance);
+	double distance = grav_dir.length();
+	double Rs = 2 * grav_constant * sun_mass / (speed_of_light * speed_of_light);
+	double beta = sqrt(1.0 - Rs / distance);
 
 	pos += vel * beta * c[0] * dt;
 	vel += grav_acceleration(pos, vel, G) * d[0] * dt;
@@ -191,7 +191,7 @@ void idle_func(void)
 {
 	frame_count++; 
 
-	const long double dt = 0.000001*(speed_of_light / mercury_vel.length());
+	const double dt = 0.00001*(speed_of_light / mercury_vel.length());
 
 	custom_math::vector_3 last_pos = mercury_pos;
 
@@ -219,7 +219,7 @@ void idle_func(void)
 			custom_math::vector_3 current_dir = mercury_pos;
 			current_dir.normalize();
 
-			const long double angle = acos(current_dir.dot(initial_dir));
+			const double angle = acos(current_dir.dot(initial_dir));
 			initial_dir = current_dir;
 
 			if (mercury_pos.x < 0)
@@ -227,10 +227,10 @@ void idle_func(void)
 			else
 				total -= angle;
 
-			const long double avg = total / orbit_count;
+			const double avg = total / orbit_count;
 
-			const long double num_orbits_per_earth_century = 365.0 / 88.0 * 100;
-			const long double to_arcseconds = 1.0 / (pi / (180.0 * 3600.0));
+			const double num_orbits_per_earth_century = 365.0 / 88.0 * 100;
+			const double to_arcseconds = 1.0 / (pi / (180.0 * 3600.0));
 
 			cout << "orbit count " << orbit_count << endl;
 			cout << delta * num_orbits_per_earth_century * to_arcseconds << endl;
