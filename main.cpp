@@ -27,7 +27,7 @@ custom_math::vector_3 grav_acceleration(const custom_math::vector_3& pos, const 
 
 	double distance = grav_dir.length();
 	grav_dir.normalize();
-	const double x = 2;// 2 - sqrt(1 - (vel.length() * vel.length()) / (speed_of_light * speed_of_light));
+	const double x = 1;// 2 - sqrt(1 - (vel.length() * vel.length()) / (speed_of_light * speed_of_light));
 
 	custom_math::vector_3 accel = grav_dir * x * G * sun_mass / pow(distance, 2.0);
 
@@ -189,15 +189,15 @@ int frame_count = 0;
 
 void idle_func(void)
 {
-	frame_count++;
+	frame_count++; 
 
-	const double dt = 0.00009*(speed_of_light / mercury_vel.length());
+	const double dt = 0.00001*(speed_of_light / mercury_vel.length());
 
 	custom_math::vector_3 last_pos = mercury_pos;
 
-	//proceed_Euler(mercury_pos, mercury_vel, grav_constant, dt);
+	proceed_Euler(mercury_pos, mercury_vel, grav_constant, dt);
 	//proceed_RK4(mercury_pos, mercury_vel, grav_constant, dt);
-	proceed_symplectic4(mercury_pos, mercury_vel, grav_constant, dt);
+	//proceed_symplectic4(mercury_pos, mercury_vel, grav_constant, dt);
 	 
 	if (decreasing)
 	{
