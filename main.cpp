@@ -120,8 +120,11 @@ void idle_func(void)
 		}
 	}
 
+
+	// Commented out due to performance reason
 	// positions.push_back(mercury_pos);
-	
+
+	// Commented out due to performance reason
 	//if(frame_count % 60000000 == 0)
 	//	glutPostRedisplay();
 }
