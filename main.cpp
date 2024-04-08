@@ -77,7 +77,7 @@ void idle_func(void)
 	proceed_Euler(mercury_pos, mercury_vel, grav_constant, dt);
 
 
-	/// this doesn't work... change it by keeping track of previous two positions
+	/// this doesn't work all of the time... change it by keeping track of previous two positions
 
 
 	if (decreasing)
@@ -107,7 +107,10 @@ void idle_func(void)
 			const long double angle = acos(d);
 			previous_dir = current_dir;
 
-			if (mercury_pos.x < 0)
+			custom_math::vector_3 temp_mercury_pos = mercury_pos;
+			temp_mercury_pos.rotate_z(-total);
+
+			if (temp_mercury_pos.x < 0)
 				total += angle;
 			else
 				total -= angle;
@@ -122,7 +125,7 @@ void idle_func(void)
 			cout << "total " << total * num_orbits_per_earth_century * to_arcseconds << endl;
 			cout << "angle " << angle * num_orbits_per_earth_century * to_arcseconds << endl;
 			cout << "delta " << delta * num_orbits_per_earth_century * to_arcseconds << endl;
-			cout << "avg   " << avg * num_orbits_per_earth_century * to_arcseconds << endl;
+			cout << "avg   " << avg   * num_orbits_per_earth_century * to_arcseconds << endl;
 
 			cout << endl;
 
