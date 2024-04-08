@@ -5,6 +5,13 @@ int main(int argc, char** argv)
 {
 	//cout << setprecision(20) << endl;
 
+	while (1)
+	{
+		idle_func();
+	}
+
+	return 0;
+
 	glutInit(&argc, argv);
 	init_opengl(win_x, win_y);
 	glutReshapeFunc(reshape_func);
@@ -27,7 +34,7 @@ custom_math::vector_3 grav_acceleration(const custom_math::vector_3& pos, const 
 
 	long double distance = grav_dir.length();
 	grav_dir.normalize();
-	const long double x = 1;// 2 - sqrt(1 - (vel.length() * vel.length()) / (speed_of_light * speed_of_light));
+	const long double x = 2 - sqrt(1 - (vel.length() * vel.length()) / (speed_of_light * speed_of_light));
 
 	custom_math::vector_3 accel = grav_dir * x * G * sun_mass / pow(distance, 2.0);
 
@@ -42,7 +49,7 @@ void proceed_Euler(custom_math::vector_3& pos, custom_math::vector_3& vel, const
 	const custom_math::vector_3 grav_dir = sun_pos - pos;
 	const long double distance = grav_dir.length();
 	const long double Rs = 2 * grav_constant * sun_mass / (speed_of_light * speed_of_light);
-	const float beta = 1;// sqrt(1.0 - Rs / distance);
+	const float beta = sqrt(1.0 - Rs / distance);
 
 	vel += accel * dt;
 
@@ -63,7 +70,7 @@ void idle_func(void)
 {
 	frame_count++;
 
-	const long double dt = 1e-6*(speed_of_light / mercury_vel.length());
+	const long double dt = 1e-5*(speed_of_light / mercury_vel.length());
 
 	custom_math::vector_3 last_pos = mercury_pos;
 
@@ -80,6 +87,7 @@ void idle_func(void)
 			// hit perihelion
 			cout << "hit perihelion" << endl;
 			decreasing = false;
+			return;
 		}
 	}
 	else
@@ -87,30 +95,34 @@ void idle_func(void)
 		if (mercury_pos.length() < last_pos.length())
 		{
 			// hit aphelion
+			cout << "hit aphelion" << endl;
 
 			orbit_count++;
 
 			custom_math::vector_3 current_dir = mercury_pos;
 			current_dir.normalize();
 
-			const long double angle = acos(current_dir.dot(initial_dir));
-			initial_dir = current_dir;
+			const long double d = current_dir.dot(previous_dir);
+
+			const long double angle = acos(d);
+			previous_dir = current_dir;
 
 			if (mercury_pos.x < 0)
 				total += angle;
 			else
 				total -= angle;
 
-
 			const long double avg = total / orbit_count;
 
 			static const long double num_orbits_per_earth_century = 365.0 / 88.0 * 100;
 			static const long double to_arcseconds = 1.0 / (pi / (180.0 * 3600.0));
 
-			cout << "orbit count " << orbit_count << endl;
-			cout << "total " << total << " angle " << angle << endl;
-			cout << delta * num_orbits_per_earth_century * to_arcseconds << endl;
-			cout << avg * num_orbits_per_earth_century * to_arcseconds << endl;
+			cout << "orbit " << orbit_count << endl;
+			cout << "dot   " << d << endl;
+			cout << "total " << total * num_orbits_per_earth_century * to_arcseconds << endl;
+			cout << "angle " << angle * num_orbits_per_earth_century * to_arcseconds << endl;
+			cout << "delta " << delta * num_orbits_per_earth_century * to_arcseconds << endl;
+			cout << "avg   " << avg * num_orbits_per_earth_century * to_arcseconds << endl;
 
 			cout << endl;
 

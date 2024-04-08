@@ -63,7 +63,7 @@ bool decreasing = true;
 size_t orbit_count = 0;
 
 
-custom_math::vector_3 initial_dir(0, 1, 0);
+custom_math::vector_3 previous_dir(0, 1, 0);
 
 
 
