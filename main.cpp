@@ -44,11 +44,14 @@ custom_math::vector_3 grav_acceleration(const custom_math::vector_3& pos, const 
 void proceed_Euler(custom_math::vector_3& pos, custom_math::vector_3& vel, const long double G, const long double dt)
 {
 	const custom_math::vector_3 grav_dir = sun_pos - pos;
-	const long double distance = grav_dir.length();
-	const long double Rs = 2 * grav_constant * sun_mass / (speed_of_light * speed_of_light);
+	const double distance = grav_dir.length();
+	const double Rs = 2 * grav_constant * sun_mass / (speed_of_light * speed_of_light);
 	
-	const float alpha = 2 - sqrt(1 - (vel.length() * vel.length()) / (speed_of_light * speed_of_light));
-	const float beta = sqrt(1.0 - Rs / distance);
+	const double one_minus_speed_div = 1 - (vel.length() * vel.length()) / (speed_of_light * speed_of_light);
+	const double alpha = 2 - sqrt(one_minus_speed_div);
+	
+	const double one_minus_ratio = 1 - Rs / distance;
+	const float beta = sqrt(one_minus_ratio);
 
 	custom_math::vector_3 accel = grav_acceleration(pos, vel, G);// *(1.0 / beta);
 
