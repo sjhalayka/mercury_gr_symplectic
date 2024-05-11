@@ -32,11 +32,10 @@ custom_math::vector_3 grav_acceleration(const custom_math::vector_3& pos, const 
 {
 	custom_math::vector_3 grav_dir = sun_pos - pos;
 
-	long double distance = grav_dir.length();
+	const double distance = grav_dir.length();
 	grav_dir.normalize();
-	const long double x = 2 - sqrt(1 - (vel.length() * vel.length()) / (speed_of_light * speed_of_light));
 
-	custom_math::vector_3 accel = grav_dir * x * G * sun_mass / pow(distance, 2.0);
+	custom_math::vector_3 accel = grav_dir * G * sun_mass / (distance * distance);
 
 	return accel;
 }
@@ -44,22 +43,17 @@ custom_math::vector_3 grav_acceleration(const custom_math::vector_3& pos, const 
 
 void proceed_Euler(custom_math::vector_3& pos, custom_math::vector_3& vel, const long double G, const long double dt)
 {
-	custom_math::vector_3 accel = grav_acceleration(pos, vel, G);
-
 	const custom_math::vector_3 grav_dir = sun_pos - pos;
 	const long double distance = grav_dir.length();
 	const long double Rs = 2 * grav_constant * sun_mass / (speed_of_light * speed_of_light);
+	
+	const float alpha = 2 - sqrt(1 - (vel.length() * vel.length()) / (speed_of_light * speed_of_light));
 	const float beta = sqrt(1.0 - Rs / distance);
 
-	vel += accel * dt;
+	custom_math::vector_3 accel = grav_acceleration(pos, vel, G);// *(1.0 / beta);
 
-	if (vel.length() > speed_of_light)
-	{
-		vel.normalize();
-		vel *= speed_of_light;
-	}
-
-	pos += vel * beta * dt;
+	vel += accel * dt * alpha;
+	pos += vel * dt * beta;
 }
 
 
