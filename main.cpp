@@ -3,7 +3,8 @@
 
 int main(int argc, char** argv)
 {
-	//cout << setprecision(20) << endl;
+	cout << setprecision(20) << endl;
+
 
 	while (1)
 	{
@@ -41,17 +42,34 @@ custom_math::vector_3 grav_acceleration(const custom_math::vector_3& pos, const 
 }
 
 
+
+// Stolen from Stack Exchange
+float precision(double f, int places)
+{
+	double n = std::pow(10.0f, places);
+	return std::round(f * n) / n;
+}
+
+
+
 void proceed_Euler(custom_math::vector_3& pos, custom_math::vector_3& vel, const long double G, const long double dt)
 {
 	const custom_math::vector_3 grav_dir = sun_pos - pos;
 	const double distance = grav_dir.length();
 	const double Rs = 2 * grav_constant * sun_mass / (speed_of_light * speed_of_light);
-	
-	const double one_minus_speed_div = 1 - (vel.length() * vel.length()) / (speed_of_light * speed_of_light);
-	const double alpha = 2 - sqrt(one_minus_speed_div);
-	
-	const double one_minus_ratio = 1 - Rs / distance;
-	const float beta = sqrt(one_minus_ratio);
+
+	const double alpha = 2 - sqrt(1 - (vel.length() * vel.length()) / (speed_of_light * speed_of_light));
+
+	double beta = sqrt(1 - Rs / distance);
+
+	// 6 -> 1.8
+	// 7 -> 1.8
+	// 8 -> 48.9
+	// 9 -> 42.9
+	// 10 -> 42.6
+	// 11 -> 42.6
+
+	beta = precision(beta, 9);
 
 	custom_math::vector_3 accel = grav_acceleration(pos, vel, G);// *(1.0 / beta);
 
@@ -67,7 +85,7 @@ void idle_func(void)
 {
 	frame_count++;
 
-	const long double dt = 1e-5*(speed_of_light / mercury_vel.length());
+	const long double dt = 1e-5 *(speed_of_light / mercury_vel.length());
 
 	custom_math::vector_3 last_pos = mercury_pos;
 
@@ -122,7 +140,7 @@ void idle_func(void)
 			cout << "total " << total * num_orbits_per_earth_century * to_arcseconds << endl;
 			cout << "angle " << angle * num_orbits_per_earth_century * to_arcseconds << endl;
 			cout << "delta " << delta * num_orbits_per_earth_century * to_arcseconds << endl;
-			cout << "avg   " << avg   * num_orbits_per_earth_century * to_arcseconds << endl;
+			cout << "avg   " << avg * num_orbits_per_earth_century * to_arcseconds << endl;
 
 			cout << endl;
 
@@ -398,7 +416,6 @@ void passive_motion_func(int x, int y)
 	mouse_x = x;
 	mouse_y = y;
 }
-
 
 
 
