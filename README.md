@@ -1,1 +1,1 @@
-# mercury_gr_symplectic
+# mercury_gr
