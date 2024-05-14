@@ -156,10 +156,10 @@ void idle_func(void)
 			const long double angle = acos(d);
 			previous_dir = current_dir;
 
-			custom_math::vector_3 temp_mercury_pos = last_pos;
-			temp_mercury_pos.rotate_z(-total);
+			custom_math::vector_3 temp_pos = last_pos;
+			temp_pos.rotate_z(-total);
 
-			if (temp_mercury_pos.x < 0)
+			if (temp_pos.x < 0)
 				total += angle;
 			else
 				total -= angle;
@@ -174,7 +174,7 @@ void idle_func(void)
 			cout << "total " << total * num_orbits_per_earth_century * to_arcseconds << endl;
 			cout << "angle " << angle * num_orbits_per_earth_century * to_arcseconds << endl;
 			cout << "delta " << delta * num_orbits_per_earth_century * to_arcseconds << endl;
-			cout << "avg   " << avg * num_orbits_per_earth_century * to_arcseconds << endl;
+			cout << "avg   " << avg   * num_orbits_per_earth_century * to_arcseconds << endl;
 
 			cout << endl;
 
