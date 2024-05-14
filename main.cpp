@@ -119,7 +119,7 @@ void idle_func(void)
 {
 	frame_count++;
 
-	const long double dt = 1e-5 *(speed_of_light / mercury_vel.length());
+	const long double dt = 0.01;// 5e-6 * (speed_of_light / mercury_vel.length());
 
 	custom_math::vector_3 last_pos = mercury_pos;
 
@@ -148,7 +148,7 @@ void idle_func(void)
 
 			orbit_count++;
 
-			custom_math::vector_3 current_dir = mercury_pos;
+			custom_math::vector_3 current_dir = last_pos;
 			current_dir.normalize();
 
 			const long double d = current_dir.dot(previous_dir);
@@ -156,7 +156,7 @@ void idle_func(void)
 			const long double angle = acos(d);
 			previous_dir = current_dir;
 
-			custom_math::vector_3 temp_mercury_pos = mercury_pos;
+			custom_math::vector_3 temp_mercury_pos = last_pos;
 			temp_mercury_pos.rotate_z(-total);
 
 			if (temp_mercury_pos.x < 0)
