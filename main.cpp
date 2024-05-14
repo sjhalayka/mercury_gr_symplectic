@@ -5,6 +5,23 @@ int main(int argc, char** argv)
 {
 	cout << setprecision(20) << endl;
 
+	//double f = 12434.555567798;
+
+	//	ostringstream oss;
+	//	oss << std::fixed << setprecision(7);
+	//	oss << f;
+
+	//	istringstream iss(oss.str());
+
+	//	double x = 0;
+
+	//	iss >> x;
+
+	//	cout << x;
+
+	//	exit(0);
+
+
 
 	while (1)
 	{
@@ -47,9 +64,27 @@ custom_math::vector_3 grav_acceleration(const custom_math::vector_3& pos, const 
 double precision(double f, int places)
 {
 	long double n = std::pow(10.0f, places);
-	return std::ceil(f * n) / n;
+	return std::round(f * n) / n;
 }
 
+
+double precision2(double f, int places)
+{
+	return f;
+
+	static ostringstream oss;
+	oss.clear();
+	oss << std::fixed << setprecision(places) << f;
+
+	static istringstream iss;
+	iss.clear();
+	iss.str(oss.str());
+
+	double x = 0;
+	iss >> x;
+
+	return x;
+}
 
 
 void proceed_Euler(custom_math::vector_3& pos, custom_math::vector_3& vel, const long double G, const long double dt)
@@ -58,27 +93,22 @@ void proceed_Euler(custom_math::vector_3& pos, custom_math::vector_3& vel, const
 	const double distance = grav_dir.length();
 	const double Rs = 2 * grav_constant * sun_mass / (speed_of_light * speed_of_light);
 
-	const double alpha = 2 - sqrt(1 - (vel.length() * vel.length()) / (speed_of_light * speed_of_light));
+	const double alpha = 2.0 - sqrt(1 - (vel.length() * vel.length()) / (speed_of_light * speed_of_light));
 
-	double beta = sqrt(1 - Rs / distance);
-	float beta_f = beta;
-	double beta_2 = beta_f;
+	double beta = sqrt(1.0 - Rs / distance);
 
-	if (beta_2 == 0)
-	{
-//		cout << "0" << endl;
-		beta_2 = std::numeric_limits<double>::epsilon();
-	}
-	else if (beta_2 == 1)
-	{
-//		cout << "1" << endl;
-		beta_2 = 1.0 - std::numeric_limits<double>::epsilon();
-	}
+	//beta = precision2(beta, 3);
 
-	custom_math::vector_3 accel = grav_acceleration(pos, vel, G);
+	beta = static_cast<float>(beta);
+
+	//cout << precision2(beta, 9) << " " << beta << endl;
+
+
+
+	custom_math::vector_3 accel = grav_acceleration(pos, vel, G);// *(1.0 / beta);
 
 	vel += accel * dt * alpha;
-	pos += vel * dt * beta_2;
+	pos += vel * dt * beta;
 }
 
 
