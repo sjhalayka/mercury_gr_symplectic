@@ -1,3 +1,9 @@
+
+
+// Uncomment this to visualize the orbit using OpenGL/GLUT
+//#define USE_OPENGL
+
+
 #include "main.h"
 
 
@@ -5,13 +11,17 @@ int main(int argc, char** argv)
 {
 	cout << setprecision(20) << endl;
 
+#ifndef USE_OPENGL
+
 	while (1)
 	{
 		idle_func();
 	}
 
 	return 0;
+#endif
 
+#ifdef USE_OPENGL
 	glutInit(&argc, argv);
 	init_opengl(win_x, win_y);
 	glutReshapeFunc(reshape_func);
@@ -24,6 +34,7 @@ int main(int argc, char** argv)
 	//glutIgnoreKeyRepeat(1);
 	glutMainLoop();
 	glutDestroyWindow(win_id);
+#endif
 
 	return 0;
 }
@@ -69,6 +80,13 @@ double precision2(double f, int places)
 }
 
 
+
+
+
+
+
+
+
 void proceed_Euler(custom_math::vector_3& pos, custom_math::vector_3& vel, const long double G, const long double dt)
 {
 	const custom_math::vector_3 grav_dir = sun_pos - pos;
@@ -81,13 +99,7 @@ void proceed_Euler(custom_math::vector_3& pos, custom_math::vector_3& vel, const
 
 	beta = static_cast<float>(beta);
 
-	if (beta <= 0.0)
-		beta = 0.0000000001;
-
-	if (beta >= 1.0)
-		beta = 0.9999999999;
-
-	custom_math::vector_3 accel = grav_acceleration(pos, vel, G);// *(1.0 / beta);
+	custom_math::vector_3 accel = grav_acceleration(pos, vel, G);
 
 	vel += accel * dt * alpha;
 	pos += vel * dt * beta;
@@ -108,9 +120,6 @@ void idle_func(void)
 	proceed_Euler(mercury_pos, mercury_vel, grav_constant, dt);
 
 
-	/// this doesn't work all of the time... change it by keeping track of previous two positions
-
-
 	if (decreasing)
 	{
 		if (mercury_pos.length() > last_pos.length())
@@ -125,8 +134,6 @@ void idle_func(void)
 	{
 		if (mercury_pos.length() < last_pos.length())
 		{
-			//last_pos = mercury_pos;
-
 			// hit aphelion
 			cout << "hit aphelion" << endl;
 
@@ -162,20 +169,25 @@ void idle_func(void)
 
 			cout << endl;
 
+#ifdef USE_OPENGL
 			positions.clear();
-
+#endif
 			decreasing = true;
 		}
 	}
 
+#ifdef USE_OPENGL
+	 //Commented out due to performance reason
+	 positions.push_back(mercury_pos);
 
-	// Commented out due to performance reason
-	// positions.push_back(mercury_pos);
-
-	// Commented out due to performance reason
-	//if(frame_count % 60000000 == 0)
-	//	glutPostRedisplay();
+	 //Commented out due to performance reason
+	if(frame_count % 6000000 == 0)
+		glutPostRedisplay();
+#endif
 }
+
+
+#ifdef USE_OPENGL
 
 void init_opengl(const int& width, const int& height)
 {
@@ -435,5 +447,4 @@ void passive_motion_func(int x, int y)
 	mouse_y = y;
 }
 
-
-
+#endif
