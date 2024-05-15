@@ -5,24 +5,6 @@ int main(int argc, char** argv)
 {
 	cout << setprecision(20) << endl;
 
-	//double f = 12434.555567798;
-
-	//	ostringstream oss;
-	//	oss << std::fixed << setprecision(7);
-	//	oss << f;
-
-	//	istringstream iss(oss.str());
-
-	//	double x = 0;
-
-	//	iss >> x;
-
-	//	cout << x;
-
-	//	exit(0);
-
-
-
 	while (1)
 	{
 		idle_func();
@@ -97,13 +79,13 @@ void proceed_Euler(custom_math::vector_3& pos, custom_math::vector_3& vel, const
 
 	double beta = sqrt(1.0 - Rs / distance);
 
-	//beta = precision2(beta, 3);
-
 	beta = static_cast<float>(beta);
 
-	//cout << precision2(beta, 9) << " " << beta << endl;
+	if (beta <= 0.0)
+		beta = 0.0000000001;
 
-
+	if (beta >= 1.0)
+		beta = 0.9999999999;
 
 	custom_math::vector_3 accel = grav_acceleration(pos, vel, G);// *(1.0 / beta);
 
@@ -119,7 +101,7 @@ void idle_func(void)
 {
 	frame_count++;
 
-	const long double dt = 0.01;// 5e-6 * (speed_of_light / mercury_vel.length());
+	const long double dt = 1e-5 * (speed_of_light / mercury_vel.length());
 
 	custom_math::vector_3 last_pos = mercury_pos;
 
@@ -143,6 +125,8 @@ void idle_func(void)
 	{
 		if (mercury_pos.length() < last_pos.length())
 		{
+			//last_pos = mercury_pos;
+
 			// hit aphelion
 			cout << "hit aphelion" << endl;
 
@@ -174,7 +158,7 @@ void idle_func(void)
 			cout << "total " << total * num_orbits_per_earth_century * to_arcseconds << endl;
 			cout << "angle " << angle * num_orbits_per_earth_century * to_arcseconds << endl;
 			cout << "delta " << delta * num_orbits_per_earth_century * to_arcseconds << endl;
-			cout << "avg   " << avg   * num_orbits_per_earth_century * to_arcseconds << endl;
+			cout << "avg   " << avg * num_orbits_per_earth_century * to_arcseconds << endl;
 
 			cout << endl;
 
