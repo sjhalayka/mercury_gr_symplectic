@@ -2,25 +2,6 @@
 #define main_H
 
 
-#include <ttmath/ttmath.h>
-#include <iostream>
-using namespace std;
-
-// this is a similar example to big.cpp
-// but now we're using TTMATH_BITS() macro
-// this macro returns how many words we need to store
-// the given number of bits
-
-// TTMATH_BITS(64)
-//   on a 32bit platform the macro returns 2 (2*32=64)
-//   on a 64bit platform the macro returns 1
-
-// TTMATH_BITS(128)
-//   on a 32bit platform the macro returns 4 (4*32=128)
-//   on a 64bit platform the macro returns 2 (2*64=128)
-
-// Big<exponent, mantissa>
-typedef ttmath::Big<TTMATH_BITS(256), TTMATH_BITS(512)> MyBig;
 
 
 

@@ -4,6 +4,11 @@
 //#define USE_OPENGL
 
 
+#include <ttmath/ttmath.h>
+typedef ttmath::Big<TTMATH_BITS(256), TTMATH_BITS(512)> MyBig;
+
+
+
 #include "main.h"
 
 int main(int argc, char** argv)
