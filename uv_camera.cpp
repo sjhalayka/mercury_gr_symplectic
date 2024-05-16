@@ -70,9 +70,9 @@ void uv_camera::Transform(void)
 		near_plane, far_plane);
 
 	gluLookAt(
-		eye.x, eye.y, eye.z, // Eye position.
-		eye.x + look_at.x, eye.y + look_at.y, eye.z + look_at.z, // Look at position (not direction).
-		up.x, up.y, up.z); // Up direction vector.
+		eye.x.ToDouble(), eye.y.ToDouble(), eye.z.ToDouble(), // Eye position.
+		eye.x.ToDouble() + look_at.x.ToDouble(), eye.y.ToDouble() + look_at.y.ToDouble(), eye.z.ToDouble() + look_at.z.ToDouble(), // Look at position (not direction).
+		up.x.ToDouble(), up.y.ToDouble(), up.z.ToDouble()); // Up direction vector.
 }
 
 void uv_camera::Set(void)
@@ -108,9 +108,9 @@ void uv_camera::Set_Large_Screenshot(size_t num_cams, size_t cam_index_x, size_t
     glFrustum(left, right, bottom, top, near_plane, far_plane);
 
 	gluLookAt(
-		eye.x, eye.y, eye.z, // Eye position.
-		eye.x + look_at.x, eye.y + look_at.y, eye.z + look_at.z, // Look at position (not direction).
-		up.x, up.y, up.z); // Up direction vector.
+		eye.x.ToDouble(), eye.y.ToDouble(), eye.z.ToDouble(), // Eye position.
+		eye.x.ToDouble() + look_at.x.ToDouble(), eye.y.ToDouble() + look_at.y.ToDouble(), eye.z.ToDouble() + look_at.z.ToDouble(), // Look at position (not direction).
+		up.x.ToDouble(), up.y.ToDouble(), up.z.ToDouble()); // Up direction vector.
 }
 
 void uv_camera::Reset(void)
@@ -127,16 +127,7 @@ void uv_camera::Reset(void)
 
 void uv_camera::Rotate(void)
 {
-	// Rotate about the world x axis
-	look_at.rotate_x(u);
-	up.rotate_x(u);
-	// Right only rotates on the x axis
-
-	// Rotate about the world y axis
-	look_at.rotate_y(v);
-	up.rotate_y(v);
-	right.rotate_y(v);
-}
+  }
 
 void uv_camera::Translate(void)
 {

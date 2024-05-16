@@ -1,11 +1,8 @@
 
 
 // Uncomment this to visualize the orbit using OpenGL/GLUT
-//#define USE_OPENGL
+#define USE_OPENGL
 
-
-#include <ttmath/ttmath.h>
-typedef ttmath::Big<TTMATH_BITS(256), TTMATH_BITS(512)> MyBig;
 
 
 
@@ -14,8 +11,6 @@ typedef ttmath::Big<TTMATH_BITS(256), TTMATH_BITS(512)> MyBig;
 int main(int argc, char** argv)
 {
 	cout << setprecision(20) << endl;
-
-	MyBig x;
 
 
 #ifndef USE_OPENGL
@@ -46,11 +41,11 @@ int main(int argc, char** argv)
 	return 0;
 }
 
-custom_math::vector_3 grav_acceleration(const custom_math::vector_3& pos, const custom_math::vector_3& vel, const long double G)
+custom_math::vector_3 grav_acceleration(const custom_math::vector_3& pos, const custom_math::vector_3& vel, const MyBig G)
 {
 	custom_math::vector_3 grav_dir = sun_pos - pos;
 
-	const double distance = grav_dir.length();
+	const MyBig distance = grav_dir.length();
 	grav_dir.normalize();
 
 	custom_math::vector_3 accel = grav_dir * G * sun_mass / (distance * distance);
@@ -60,31 +55,6 @@ custom_math::vector_3 grav_acceleration(const custom_math::vector_3& pos, const 
 
 
 
-// Stolen from Stack Exchange
-double precision(double f, int places)
-{
-	long double n = std::pow(10.0f, places);
-	return std::round(f * n) / n;
-}
-
-
-double precision2(double f, int places)
-{
-	return f;
-
-	static ostringstream oss;
-	oss.clear();
-	oss << std::fixed << setprecision(places) << f;
-
-	static istringstream iss;
-	iss.clear();
-	iss.str(oss.str());
-
-	double x = 0;
-	iss >> x;
-
-	return x;
-}
 
 
 
@@ -92,19 +62,33 @@ double precision2(double f, int places)
 
 
 
-
-
-void proceed_Euler(custom_math::vector_3& pos, custom_math::vector_3& vel, const long double G, const long double dt)
+void proceed_Euler(custom_math::vector_3& pos, custom_math::vector_3& vel, const MyBig G, const MyBig dt)
 {
 	const custom_math::vector_3 grav_dir = sun_pos - pos;
-	const double distance = grav_dir.length();
-	const double Rs = 2 * grav_constant * sun_mass / (speed_of_light * speed_of_light);
+	const MyBig distance = grav_dir.length();
 
-	const double alpha = 2.0 - sqrt(1 - (vel.length() * vel.length()) / (speed_of_light * speed_of_light));
+	const MyBig two = 2;
+	const MyBig one = 1;
 
-	double beta = sqrt(1.0 - Rs / distance);
+//	cout <<  pos.x << " " <<  pos.y << " " <<  pos.z << " " << endl;
 
-	beta = static_cast<float>(beta);
+	const MyBig Rs = two * grav_constant * sun_mass / (speed_of_light * speed_of_light);
+	const MyBig alpha = 1;// two - Sqrt(one - (vel.length() * vel.length()) / (speed_of_light * speed_of_light));
+	const MyBig beta = 1;// Sqrt(one - Rs / distance);
+
+
+
+
+
+
+
+
+
+
+	//cout << alpha << endl << beta << endl << endl;
+//	cout << Rs / distance << endl;
+
+	//beta = static_cast<float>(beta);
 
 	/*if (beta >= 1)
 		beta = 1.0 - std::numeric_limits<float>::epsilon();*/
@@ -130,14 +114,14 @@ void proceed_Euler(custom_math::vector_3& pos, custom_math::vector_3& vel, const
 }
 
 
-long double total = 0;
+MyBig total = 0;
 long unsigned int frame_count = 0;
 
 void idle_func(void)
 {
 	frame_count++;
 
-	const long double dt = 5e-6 * (speed_of_light / mercury_vel.length());
+	const MyBig dt = 10;// (speed_of_light / mercury_vel.length()) * 1e-5;
 
 	custom_math::vector_3 last_pos = mercury_pos;
 
@@ -146,7 +130,7 @@ void idle_func(void)
 
 	if (decreasing)
 	{
-		if (mercury_pos.length() > last_pos.length())
+		if (mercury_pos.length() > last_pos.length() && frame_count > 1)
 		{
 			// hit perihelion
 			cout << "hit perihelion" << endl;
@@ -166,9 +150,9 @@ void idle_func(void)
 			custom_math::vector_3 current_dir = last_pos;
 			current_dir.normalize();
 
-			const long double d = current_dir.dot(previous_dir);
+			const MyBig d = current_dir.dot(previous_dir);
 
-			const long double angle = acos(d);
+			const MyBig angle = ACos(d);
 			previous_dir = current_dir;
 
 			custom_math::vector_3 temp_pos = last_pos;
@@ -179,10 +163,11 @@ void idle_func(void)
 			else
 				total -= angle;
 
-			const long double avg = total / orbit_count;
+			const MyBig avg = total / orbit_count;
 
-			static const long double num_orbits_per_earth_century = 365.0 / 88.0 * 100;
-			static const long double to_arcseconds = 1.0 / (pi / (180.0 * 3600.0));
+			const MyBig one = 1.0;
+			static const MyBig num_orbits_per_earth_century = 365.0 / 88.0 * 100;
+			static const MyBig to_arcseconds = one / (pi / (180.0 * 3600.0));
 
 			cout << "orbit " << orbit_count << endl;
 			cout << "dot   " << d << endl;
@@ -205,8 +190,11 @@ void idle_func(void)
 	positions.push_back(mercury_pos);
 
 	//Commented out due to performance reason
-	if (frame_count % 6000000 == 0)
+	if (frame_count % 1000 == 0)
+	{
+		cout << "redisplay" << endl;
 		glutPostRedisplay();
+	}
 #endif
 }
 
@@ -236,10 +224,10 @@ void init_opengl(const int& width, const int& height)
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 
-	glClearColor(background_colour.x, background_colour.y, background_colour.z, 1);
+	glClearColor(background_colour.x.ToDouble(), background_colour.y.ToDouble(), background_colour.z.ToDouble(), 1);
 	glClearDepth(1.0f);
 
-	main_camera.Set(0, 0, camera_w, camera_fov, win_x, win_y, camera_near, camera_far);
+	main_camera.Set(0, 0, camera_w.ToDouble(), camera_fov.ToDouble(), win_x, win_y, camera_near.ToDouble(), camera_far.ToDouble());
 }
 
 void reshape_func(int width, int height)
@@ -257,7 +245,7 @@ void reshape_func(int width, int height)
 	glutReshapeWindow(win_x, win_y);
 	glViewport(0, 0, win_x, win_y);
 
-	main_camera.Set(main_camera.u, main_camera.v, main_camera.w, main_camera.fov, win_x, win_y, camera_near, camera_far);
+	main_camera.Set(main_camera.u, main_camera.v, main_camera.w, main_camera.fov, win_x, win_y, camera_near.ToDouble(), camera_far.ToDouble());
 }
 
 // Text drawing code originally from "GLUT Tutorial -- Bitmap Fonts and Orthogonal Projections" by A R Fernandes
@@ -284,12 +272,12 @@ void draw_objects(void)
 
 
 	glBegin(GL_POINTS);
-	glVertex3f(sun_pos.x, sun_pos.y, sun_pos.z);
+	glVertex3f(sun_pos.x.ToFloat(), sun_pos.y.ToFloat(), sun_pos.z.ToFloat());
 
 	glColor3f(1.0, 1.0, 1.0);
 
 	for (size_t i = 0; i < positions.size(); i++)
-		glVertex3d(positions[i].x, positions[i].y, positions[i].z);
+		glVertex3d(positions[i].x.ToFloat(), positions[i].y.ToFloat(), positions[i].z.ToFloat());
 
 	glEnd();
 
@@ -353,7 +341,7 @@ void display_func(void)
 		glPushMatrix();
 		glLoadIdentity();
 
-		glColor3f(control_list_colour.x, control_list_colour.y, control_list_colour.z);
+		glColor3f(control_list_colour.x.ToFloat(), control_list_colour.y.ToFloat(), control_list_colour.z.ToFloat());
 
 		size_t break_size = 22;
 		size_t start = 20;
@@ -450,12 +438,14 @@ void motion_func(int x, int y)
 
 	if (true == lmb_down && (0 != mouse_delta_x || 0 != mouse_delta_y))
 	{
-		main_camera.u -= static_cast<float>(mouse_delta_y) * u_spacer;
-		main_camera.v += static_cast<float>(mouse_delta_x) * v_spacer;
+		MyBig temp_spacer = u_spacer * mouse_delta_y;
+
+		//main_camera.u -= temp_spacer;
+		//main_camera.v += mouse_delta_x * v_spacer;
 	}
 	else if (true == rmb_down && (0 != mouse_delta_y))
 	{
-		main_camera.w -= static_cast<float>(mouse_delta_y) * w_spacer;
+		//main_camera.w -= static_cast<float>(mouse_delta_y) * w_spacer;
 
 		if (main_camera.w < 1.1f)
 			main_camera.w = 1.1f;

@@ -30,16 +30,16 @@ uv_camera main_camera;
 
 int win_id = 0;
 int win_x = 800, win_y = 600;
-long double camera_w = 2e11;
+MyBig camera_w = 2e11;
 
-long double camera_fov = 45;
-long double camera_x_transform = 0;
-long double camera_y_transform = 0;
-long double u_spacer = 0.01;
-long double v_spacer = 0.5 * u_spacer;
-long double w_spacer = 0.1;
-long double camera_near = 1;
-long double camera_far = 1000000000;
+MyBig camera_fov = 45;
+MyBig camera_x_transform = 0;
+MyBig camera_y_transform = 0;
+MyBig u_spacer = 0.01;
+MyBig v_spacer = u_spacer * 0.5;
+MyBig w_spacer = 0.1;
+MyBig camera_near = 1;
+MyBig camera_far = 1000000000;
 
 bool lmb_down = false;
 bool mmb_down = false;
@@ -102,9 +102,9 @@ void passive_motion_func(int x, int y);
 void render_string(int x, const int y, void *font, const string &text);
 void draw_objects(void);
 
-const long double speed_of_light = 299792458;
-const long double grav_constant = 6.6743e-11;
-const long double sun_mass = 1.98847e30;
+const MyBig speed_of_light = 299792458;
+const MyBig grav_constant = 6.6743e-11;
+const MyBig sun_mass = 1.98847e30;
 
 custom_math::vector_3 sun_pos(0, 0, 0);
 custom_math::vector_3 mercury_pos(0, 69817079000.0, 0);
@@ -131,8 +131,8 @@ custom_math::vector_3 previous_dir(0, 1, 0);
 // https://astronomy.stackexchange.com/a/29008/15517
 
 
-const long double pi = 4.0 * atan(1.0);
-const long double delta = 6 * pi * grav_constant * sun_mass / (speed_of_light*speed_of_light * (1 - 0.2056*0.2056) * 57.909e9);
+const MyBig pi = 4.0 * atan(1.0);
+const MyBig delta =  pi * 6.0 * grav_constant * sun_mass / (speed_of_light*speed_of_light * (1 - 0.2056*0.2056) * 57.909e9);
 
 
 
