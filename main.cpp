@@ -121,7 +121,7 @@ void idle_func(void)
 {
 	frame_count++;
 
-	const MyBig dt = 10;// (speed_of_light / mercury_vel.length()) * 1e-5;
+	const MyBig dt = 0.1;// (speed_of_light / mercury_vel.length()) * 1e-5;
 
 	custom_math::vector_3 last_pos = mercury_pos;
 
@@ -187,11 +187,12 @@ void idle_func(void)
 
 #ifdef USE_OPENGL
 	//Commented out due to performance reason
-	positions.push_back(mercury_pos);
+
 
 	//Commented out due to performance reason
-	if (frame_count % 1000 == 0)
+	if (frame_count % 100000 == 0)
 	{
+		positions.push_back(mercury_pos);
 		cout << "redisplay" << endl;
 		glutPostRedisplay();
 	}
@@ -267,7 +268,7 @@ void draw_objects(void)
 	glPushMatrix();
 
 
-	glPointSize(1.0);
+	glPointSize(6.0);
 	glLineWidth(1.0);
 
 
@@ -433,26 +434,26 @@ void motion_func(int x, int y)
 	mouse_x = x;
 	mouse_y = y;
 
-	int mouse_delta_x = mouse_x - prev_mouse_x;
-	int mouse_delta_y = prev_mouse_y - mouse_y;
+	//int mouse_delta_x = mouse_x - prev_mouse_x;
+	//int mouse_delta_y = prev_mouse_y - mouse_y;
 
-	if (true == lmb_down && (0 != mouse_delta_x || 0 != mouse_delta_y))
-	{
-		MyBig temp_spacer = u_spacer * mouse_delta_y;
+	//if (true == lmb_down && (0 != mouse_delta_x || 0 != mouse_delta_y))
+	//{
+	//	MyBig temp_spacer = u_spacer * mouse_delta_y;
 
-		//main_camera.u -= temp_spacer;
-		//main_camera.v += mouse_delta_x * v_spacer;
-	}
-	else if (true == rmb_down && (0 != mouse_delta_y))
-	{
-		//main_camera.w -= static_cast<float>(mouse_delta_y) * w_spacer;
+	//	//main_camera.u -= temp_spacer;
+	//	//main_camera.v += mouse_delta_x * v_spacer;
+	//}
+	//else if (true == rmb_down && (0 != mouse_delta_y))
+	//{
+	//	//main_camera.w -= static_cast<float>(mouse_delta_y) * w_spacer;
 
-		if (main_camera.w < 1.1f)
-			main_camera.w = 1.1f;
+	//	//if (main_camera.w < 1.1f)
+	//	//	main_camera.w = 1.1f;
 
-	}
+	//}
 
-	main_camera.Set(); // Calculate new camera vectors.
+	//main_camera.Set(); // Calculate new camera vectors.
 }
 
 void passive_motion_func(int x, int y)

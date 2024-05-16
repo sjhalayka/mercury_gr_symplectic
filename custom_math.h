@@ -28,7 +28,7 @@ using std::endl;
 #define TTMATH_NOASM 1 
 
 #include <ttmath/ttmath.h>
-typedef ttmath::Big<TTMATH_BITS(256), TTMATH_BITS(512)> MyBig;
+typedef ttmath::Big<1, 3> MyBig;
 
 
 
