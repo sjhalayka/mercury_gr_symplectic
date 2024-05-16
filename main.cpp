@@ -11,6 +11,9 @@ int main(int argc, char** argv)
 {
 	cout << setprecision(20) << endl;
 
+
+
+
 #ifndef USE_OPENGL
 
 	while (1)
@@ -96,8 +99,11 @@ void proceed_Euler(custom_math::vector_3& pos, custom_math::vector_3& vel, const
 	const double alpha = 2.0 - sqrt(1 - (vel.length() * vel.length()) / (speed_of_light * speed_of_light));
 
 	double beta = sqrt(1.0 - Rs / distance);
+	double x = beta / std::numeric_limits<float>::epsilon();
+	beta = static_cast<float>(x) * std::numeric_limits<float>::epsilon();
 
-	beta = static_cast<float>(beta);
+	if (beta == 1)
+		beta = 1 - std::numeric_limits<float>::min();
 
 	custom_math::vector_3 accel = grav_acceleration(pos, vel, G);
 
