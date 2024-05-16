@@ -99,11 +99,25 @@ void proceed_Euler(custom_math::vector_3& pos, custom_math::vector_3& vel, const
 	const double alpha = 2.0 - sqrt(1 - (vel.length() * vel.length()) / (speed_of_light * speed_of_light));
 
 	double beta = sqrt(1.0 - Rs / distance);
-	double x = beta / std::numeric_limits<float>::epsilon();
-	beta = static_cast<float>(x) * std::numeric_limits<float>::epsilon();
 
-	if (beta == 1)
-		beta = 1 - std::numeric_limits<float>::min();
+	beta = static_cast<float>(beta);
+
+	/*if (beta >= 1)
+		beta = 1.0 - std::numeric_limits<float>::epsilon();*/
+
+
+	// Clamp
+	//if (beta <= 0)
+	//	beta = std::numeric_limits<float>::min();
+	//else if (beta >= 1)
+	//	beta = 1.0 - std::numeric_limits<float>::min();
+
+
+	//double x = beta / std::numeric_limits<float>::epsilon();
+	//beta = static_cast<float>(x) * std::numeric_limits<float>::epsilon();
+
+	//if (beta == 1)
+	//	beta = 1 - std::numeric_limits<float>::min();
 
 	custom_math::vector_3 accel = grav_acceleration(pos, vel, G);
 
@@ -119,7 +133,7 @@ void idle_func(void)
 {
 	frame_count++;
 
-	const long double dt = 1e-5 * (speed_of_light / mercury_vel.length());
+	const long double dt = 5e-6 * (speed_of_light / mercury_vel.length());
 
 	custom_math::vector_3 last_pos = mercury_pos;
 
@@ -183,11 +197,11 @@ void idle_func(void)
 	}
 
 #ifdef USE_OPENGL
-	 //Commented out due to performance reason
-	 positions.push_back(mercury_pos);
+	//Commented out due to performance reason
+	positions.push_back(mercury_pos);
 
-	 //Commented out due to performance reason
-	if(frame_count % 6000000 == 0)
+	//Commented out due to performance reason
+	if (frame_count % 6000000 == 0)
 		glutPostRedisplay();
 #endif
 }
