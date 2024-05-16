@@ -121,7 +121,7 @@ void idle_func(void)
 {
 	frame_count++;
 
-	const MyBig dt = 0.1;// (speed_of_light / mercury_vel.length()) * 1e-5;
+	const MyBig dt = 0.01;// (speed_of_light / mercury_vel.length()) * 1e-5;
 
 	custom_math::vector_3 last_pos = mercury_pos;
 
