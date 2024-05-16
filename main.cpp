@@ -6,12 +6,11 @@
 
 #include "main.h"
 
-
 int main(int argc, char** argv)
 {
 	cout << setprecision(20) << endl;
 
-
+	MyBig x;
 
 
 #ifndef USE_OPENGL
