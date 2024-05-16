@@ -193,7 +193,7 @@ void idle_func(void)
 	if (frame_count % 100000 == 0)
 	{
 		positions.push_back(mercury_pos);
-		cout << "redisplay" << endl;
+		//cout << "redisplay" << endl;
 		glutPostRedisplay();
 	}
 #endif

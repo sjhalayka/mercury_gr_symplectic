@@ -25,10 +25,10 @@ using std::endl;
 #include <cstdlib>
 
 
-#define TTMATH_NOASM 1 
+#define TTMATH_NOASM 1
 
 #include <ttmath/ttmath.h>
-typedef ttmath::Big<1, 3> MyBig;
+typedef ttmath::Big<1, 1> MyBig;
 
 
 
@@ -37,12 +37,6 @@ typedef ttmath::Big<1, 3> MyBig;
 namespace custom_math
 {
 	class vector_3;
-
-	const MyBig pi = 4 * atan(1.0);
-	//const MyBig pi_half = pi/2;
-	//const MyBig pi_2 = 2*pi;
-	//const MyBig epsilon = 1e-6;
-
 };
 
 class custom_math::vector_3
