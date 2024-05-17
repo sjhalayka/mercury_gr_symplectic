@@ -70,14 +70,16 @@ void proceed_Euler(custom_math::vector_3& pos, custom_math::vector_3& vel, const
 	const MyBig two = 2;
 	const MyBig one = 1;
 
-//	cout <<  pos.x << " " <<  pos.y << " " <<  pos.z << " " << endl;
-
 	const MyBig Rs = two * grav_constant * sun_mass / (speed_of_light * speed_of_light);
-	const MyBig alpha = 1;// two - Sqrt(one - (vel.length() * vel.length()) / (speed_of_light * speed_of_light));
-	const MyBig beta = 1;// Sqrt(one - Rs / distance);
+	const MyBig alpha = two - Sqrt(one - (vel.length() * vel.length()) / (speed_of_light * speed_of_light));
+	MyBig beta = Sqrt(one - Rs / distance);
 
+	float betaf = beta.ToFloat();
 
+	custom_math::vector_3 accel = grav_acceleration(pos, vel, G);
 
+	vel += accel * dt * alpha;
+	pos += vel * dt * betaf;
 
 
 
@@ -107,10 +109,7 @@ void proceed_Euler(custom_math::vector_3& pos, custom_math::vector_3& vel, const
 	//if (beta == 1)
 	//	beta = 1 - std::numeric_limits<float>::min();
 
-	custom_math::vector_3 accel = grav_acceleration(pos, vel, G);
 
-	vel += accel * dt * alpha;
-	pos += vel * dt * beta;
 }
 
 
