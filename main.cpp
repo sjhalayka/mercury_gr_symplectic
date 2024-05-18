@@ -74,42 +74,12 @@ void proceed_Euler(custom_math::vector_3& pos, custom_math::vector_3& vel, const
 	const MyBig alpha = two - Sqrt(one - (vel.length() * vel.length()) / (speed_of_light * speed_of_light));
 	MyBig beta = Sqrt(one - Rs / distance);
 
-	float betaf = beta.ToFloat();
+	const float betaf = beta.ToFloat();
 
 	custom_math::vector_3 accel = grav_acceleration(pos, vel, G);
 
 	vel += accel * dt * alpha;
 	pos += vel * dt * betaf;
-
-
-
-
-
-
-
-	//cout << alpha << endl << beta << endl << endl;
-//	cout << Rs / distance << endl;
-
-	//beta = static_cast<float>(beta);
-
-	/*if (beta >= 1)
-		beta = 1.0 - std::numeric_limits<float>::epsilon();*/
-
-
-	// Clamp
-	//if (beta <= 0)
-	//	beta = std::numeric_limits<float>::min();
-	//else if (beta >= 1)
-	//	beta = 1.0 - std::numeric_limits<float>::min();
-
-
-	//double x = beta / std::numeric_limits<float>::epsilon();
-	//beta = static_cast<float>(x) * std::numeric_limits<float>::epsilon();
-
-	//if (beta == 1)
-	//	beta = 1 - std::numeric_limits<float>::min();
-
-
 }
 
 
