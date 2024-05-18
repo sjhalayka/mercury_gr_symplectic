@@ -45,6 +45,20 @@ int main(int argc, char** argv)
 	return 0;
 }
 
+
+
+float normalized_double_to_float(const double d)
+{
+	float tempf = 0.0f;
+
+	while (tempf < d && tempf < 1.0f)
+		tempf += nextafterf(tempf, 1.0f);
+
+	return tempf;
+}
+
+
+
 custom_math::vector_3 grav_acceleration(const custom_math::vector_3& pos, const custom_math::vector_3& vel, const MyBig G)
 {
 	custom_math::vector_3 grav_dir = sun_pos - pos;
@@ -62,14 +76,14 @@ void proceed_Euler(custom_math::vector_3& pos, custom_math::vector_3& vel, const
 	const custom_math::vector_3 grav_dir = sun_pos - pos;
 	const MyBig distance = grav_dir.length();
 
-	const MyBig two = 2;
-	const MyBig one = 1;
+	static const MyBig two = 2;
+	static const MyBig one = 1;
 
 	const MyBig Rs = two * grav_constant * sun_mass / (speed_of_light * speed_of_light);
 	const MyBig alpha = two - Sqrt(one - (vel.length() * vel.length()) / (speed_of_light * speed_of_light));
 	const MyBig beta = Sqrt(one - Rs / distance);
 
-	const float betaf = beta.ToFloat();
+	const float betaf = normalized_double_to_float(beta.ToDouble());
 
 	custom_math::vector_3 accel = grav_acceleration(pos, vel, G);
 
@@ -85,7 +99,7 @@ void idle_func(void)
 {
 	frame_count++;
 
-	const MyBig dt = 0.01;// (speed_of_light / mercury_vel.length()) * 1e-5;
+	static const MyBig dt = 0.01;// (speed_of_light / mercury_vel.length()) * 1e-5;
 
 	custom_math::vector_3 last_pos = mercury_pos;
 
@@ -129,7 +143,7 @@ void idle_func(void)
 
 			const MyBig avg = total / orbit_count;
 
-			const MyBig one = 1.0;
+			static const MyBig one = 1.0;
 			static const MyBig num_orbits_per_earth_century = 365.0 / 88.0 * 100;
 			static const MyBig to_arcseconds = one / (pi / (180.0 * 3600.0));
 
