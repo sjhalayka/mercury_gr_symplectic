@@ -24,6 +24,10 @@ int main(int argc, char** argv)
 #endif
 
 #ifdef USE_OPENGL
+
+	// Push back the initial position
+	positions.push_back(mercury_pos);
+
 	glutInit(&argc, argv);
 	init_opengl(win_x, win_y);
 	glutReshapeFunc(reshape_func);
@@ -53,15 +57,6 @@ custom_math::vector_3 grav_acceleration(const custom_math::vector_3& pos, const 
 	return accel;
 }
 
-
-
-
-
-
-
-
-
-
 void proceed_Euler(custom_math::vector_3& pos, custom_math::vector_3& vel, const MyBig G, const MyBig dt)
 {
 	const custom_math::vector_3 grav_dir = sun_pos - pos;
@@ -72,7 +67,7 @@ void proceed_Euler(custom_math::vector_3& pos, custom_math::vector_3& vel, const
 
 	const MyBig Rs = two * grav_constant * sun_mass / (speed_of_light * speed_of_light);
 	const MyBig alpha = two - Sqrt(one - (vel.length() * vel.length()) / (speed_of_light * speed_of_light));
-	MyBig beta = Sqrt(one - Rs / distance);
+	const MyBig beta = Sqrt(one - Rs / distance);
 
 	const float betaf = beta.ToFloat();
 
@@ -155,10 +150,6 @@ void idle_func(void)
 	}
 
 #ifdef USE_OPENGL
-	//Commented out due to performance reason
-
-
-	//Commented out due to performance reason
 	if (frame_count % 100000 == 0)
 	{
 		positions.push_back(mercury_pos);
