@@ -107,8 +107,55 @@ int main(int argc, char** argv)
 
 
 
+//
+//float normalized_double_to_float(const double d)
+//{
+//	if (d <= 0.0)
+//		return 0.0f;
+//	else if (d >= 1.0)
+//		return 1.0f;
+//
+//	ostringstream oss;
+//	oss << setprecision(20) << d;
+//
+//	float df = 0;
+//
+//	istringstream iss(oss.str());
+//	iss >> df;
+//
+//	return df;
+//}
 
-float normalized_double_to_float(const double d)
+
+//
+//double normalized_double_to_float(const double d)
+//{
+//	if (d <= 0.0)
+//		return 0.0f;
+//	else if (d >= 1.0)
+//		return 1.0f;
+//
+//	ostringstream oss;
+//	oss << std::fixed << setprecision(20) << d;
+//
+//	float df = 0;
+//
+//	istringstream iss(oss.str());
+//	iss >> df;
+//
+//	float tempf = nexttowardf(1.0f, df);
+//
+//	while (tempf > df)
+//		tempf = nexttowardf(tempf, df);
+//
+//	return static_cast<double>(tempf);
+//}
+
+
+
+
+
+double truncate_normalized_double(const double d)
 {
 	if (d <= 0.0)
 		return 0.0f;
@@ -116,15 +163,21 @@ float normalized_double_to_float(const double d)
 		return 1.0f;
 
 	ostringstream oss;
-	oss << setprecision(20) << d;
+	oss << std::fixed << setprecision(9) << d;
 
 	float df = 0;
 
 	istringstream iss(oss.str());
 	iss >> df;
 
-	return df;
+	float tempf = nexttowardf(1.0f, df);
+
+	while (tempf > df)
+		tempf = nexttowardf(tempf, df);
+
+	return static_cast<double>(tempf);
 }
+
 
 
 
@@ -152,12 +205,12 @@ void proceed_Euler(custom_math::vector_3& pos, custom_math::vector_3& vel, const
 	const MyBig alpha = two - Sqrt(one - (vel.length() * vel.length()) / (speed_of_light * speed_of_light));
 	const MyBig beta = Sqrt(one - Rs / distance);
 
-	const float betaf = normalized_double_to_float(beta.ToDouble());
+	const double betad = truncate_normalized_double(beta.ToDouble());
 
 	custom_math::vector_3 accel = grav_acceleration(pos, vel, G);
 
 	vel += accel * dt * alpha;
-	pos += vel * dt * betaf;
+	pos += vel * dt * betad;
 }
 
 
