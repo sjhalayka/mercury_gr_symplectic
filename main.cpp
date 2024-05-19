@@ -46,15 +46,84 @@ int main(int argc, char** argv)
 }
 
 
+//
+//float normalized_double_to_float(const double d)
+//{
+//	if (d <= 0.0)
+//		return 0.0f;
+//	else if (d >= 1.0)
+//		return 1.0f;
+//
+//	const float df = static_cast<float>(d);
+//	float tempf = nexttowardf(1.0f, df);
+//
+//	while (tempf > df)
+//		tempf = nexttowardf(tempf, df);
+//
+//	return tempf;
+//}
+
+
+
+//
+//float normalized_double_to_float(const double d)
+//{
+//	if (d <= 0.0)
+//		return 0.0f;
+//	else if (d >= 1.0)
+//		return 1.0f;
+//
+//	const float df = static_cast<float>(d);
+//	float tempf = nexttowardf(1.0f, df);
+//
+//	while (tempf > df)
+//		tempf = nexttowardf(tempf, df);
+//
+//	return tempf;
+//}
+//
+//float normalized_double_to_float(const double d)
+//{
+//	if (d <= 0.0)
+//		return 0.0f;
+//	else if (d >= 1.0)
+//		return 1.0f;
+//
+//	ostringstream oss;
+//	oss << setprecision(20) << d;
+//
+//	float df = 0;
+//
+//	istringstream iss(oss.str());
+//	iss >> df;
+//
+//	float tempf = nexttowardf(1.0f, df);
+//
+//	while (tempf > df)
+//		tempf = nexttowardf(tempf, df);
+//
+//	return tempf;
+//}
+
+
+
 
 float normalized_double_to_float(const double d)
 {
-	float tempf = 0.0f;
+	if (d <= 0.0)
+		return 0.0f;
+	else if (d >= 1.0)
+		return 1.0f;
 
-	while (tempf < d && tempf < 1.0f)
-		tempf += nextafterf(tempf, 1.0f);
+	ostringstream oss;
+	oss << setprecision(20) << d;
 
-	return tempf;
+	float df = 0;
+
+	istringstream iss(oss.str());
+	iss >> df;
+
+	return df;
 }
 
 
